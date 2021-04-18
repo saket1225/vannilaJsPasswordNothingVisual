@@ -9,12 +9,23 @@ let signUp = document.querySelector(".signUp")
 let signIn = document.querySelector(".signIn")
 
 
+function convertToHash(stringRecieved) {
+  var hash = 0, i, chr;
+  if (stringRecieved.length === 0) return hash;
+  for (i = 0; i < stringRecieved.length; i++) {
+    chr   = stringRecieved.charCodeAt(i);
+    hash  = ((hash << 5) - hash) + chr;
+    hash |= 0; // Convert to 32bit integer
+  }
+  return hash;
+};
+
 submitButton.addEventListener("click", () => {
     let password = document.querySelector(".pass")
     let username = document.querySelector(".user")
 
     if (password.value.length>4 && username.value.length>1){
-            localStorage.setItem("password", password.value);
+            localStorage.setItem("password",convertToHash(password.value));
             localStorage.setItem("username", username.value);
             error.innerHTML = "Sign Up Completed Continue to Sign In page"
     }
@@ -60,7 +71,7 @@ logSubmit.addEventListener("click", () => {
     let usernameRecieved = localStorage.getItem("username");
     let passwordRecieved = localStorage.getItem("password");
 
-    if (logPassword.value == passwordRecieved && logUser.value == usernameRecieved){
+    if (convertToHash(logPassword.value) == passwordRecieved && logUser.value == usernameRecieved){
         error.innerHTML = "Log In Successful"
     }
 
